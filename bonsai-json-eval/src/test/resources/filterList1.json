@@ -58,15 +58,5 @@
       "field": "$.transaction",
       "value": "id2"
     }
-  },
-  {
-    "operator": "HOPE",
-    "field": "$.success",
-    "value": "\"$.success\" == true"
-  },
-  {
-    "operator": "HOPE",
-    "field": "$.success",
-    "value": "\"$.success\" == false"
   }
 ]

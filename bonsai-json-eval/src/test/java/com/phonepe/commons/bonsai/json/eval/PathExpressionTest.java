@@ -18,6 +18,7 @@ package com.phonepe.commons.bonsai.json.eval;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.TypeRef;
+import com.phonepe.commons.query.dsl.Filter;
 import com.phonepe.commons.query.dsl.general.EqualsFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,13 +39,10 @@ public class PathExpressionTest {
 
     private DocumentContext mockDocumentContext;
 
-    private BonsaiHopeEngine bonsaiHopeEngine;
-
     @BeforeEach
     void setUp() {
         JsonPathSetup.setup();
         mockDocumentContext = Mockito.mock(DocumentContext.class);
-        bonsaiHopeEngine = Mockito.mock(BonsaiHopeEngine.class);
     }
 
     @Test
@@ -91,12 +89,11 @@ public class PathExpressionTest {
         PathExpression expression = new PathExpression();
         expression.setKey("testKey");
         expression.setPath("$.data.value");
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         Mockito.when(mockDocumentContext.read(eq("$.data.value"), any(TypeRef.class)))
                 .thenReturn(Collections.singletonList(42));
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("testKey", result.getKey());
         Assertions.assertEquals(42, result.getValue());
@@ -108,13 +105,12 @@ public class PathExpressionTest {
         expression.setKey("testKey");
         expression.setPath("$.data.values");
         expression.setMultivalued(true);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Integer> values = Arrays.asList(1, 2, 3);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("testKey", result.getKey());
         Assertions.assertEquals(values, result.getValue());
@@ -125,12 +121,11 @@ public class PathExpressionTest {
         PathExpression expression = new PathExpression();
         expression.setKey("testKey");
         expression.setPath("$.data.value");
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         Mockito.when(mockDocumentContext.read(eq("$.data.value"), any(TypeRef.class)))
                 .thenReturn(null);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNull(result);
     }
 
@@ -139,12 +134,11 @@ public class PathExpressionTest {
         PathExpression expression = new PathExpression();
         expression.setKey("testKey");
         expression.setPath("$.data.value");
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         Mockito.when(mockDocumentContext.read(eq("$.data.value"), any(TypeRef.class)))
                 .thenReturn(Collections.emptyList());
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNull(result);
     }
 
@@ -154,13 +148,12 @@ public class PathExpressionTest {
         expression.setKey("sum");
         expression.setPath("$.data.values");
         expression.setOperation(PathExpression.Operation.SUM);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Arrays.asList(1, 2, 3, 4, 5);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("sum", result.getKey());
         Assertions.assertEquals(15.0, result.getValue());
@@ -172,13 +165,12 @@ public class PathExpressionTest {
         expression.setKey("avg");
         expression.setPath("$.data.values");
         expression.setOperation(PathExpression.Operation.AVERAGE);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Arrays.asList(1, 2, 3, 4, 5);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("avg", result.getKey());
         Assertions.assertEquals(3.0, result.getValue());
@@ -190,13 +182,12 @@ public class PathExpressionTest {
         expression.setKey("max");
         expression.setPath("$.data.values");
         expression.setOperation(PathExpression.Operation.MAX);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Arrays.asList(1, 2, 3, 4, 5);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("max", result.getKey());
         Assertions.assertEquals(5.0, result.getValue());
@@ -208,13 +199,12 @@ public class PathExpressionTest {
         expression.setKey("min");
         expression.setPath("$.data.values");
         expression.setOperation(PathExpression.Operation.MIN);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Arrays.asList(1, 2, 3, 4, 5);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("min", result.getKey());
         Assertions.assertEquals(1.0, result.getValue());
@@ -226,13 +216,12 @@ public class PathExpressionTest {
         expression.setKey("length");
         expression.setPath("$.data.values");
         expression.setOperation(PathExpression.Operation.LENGTH);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Arrays.asList(1, 2, 3, 4, 5);
         Mockito.when(mockDocumentContext.read(eq("$.data.values"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("length", result.getKey());
         Assertions.assertEquals(5.0, result.getValue());
@@ -244,13 +233,12 @@ public class PathExpressionTest {
         expression.setKey("timestamp");
         expression.setPath("$.data.timestamp");
         expression.setOperation(PathExpression.Operation.PAD_TIMESTAMP);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         List<Number> values = Collections.singletonList(12345);
         Mockito.when(mockDocumentContext.read(eq("$.data.timestamp"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("timestamp", result.getKey());
         Assertions.assertEquals("00000000000000012345", result.getValue());
@@ -262,14 +250,13 @@ public class PathExpressionTest {
         expression.setKey("date");
         expression.setPath("$.data.timestamp");
         expression.setOperation(PathExpression.Operation.CONVERT_TO_DATE);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         long timestamp = 1609459200000L; // 2021-01-01 00:00:00 UTC
         List<Number> values = Collections.singletonList(timestamp);
         Mockito.when(mockDocumentContext.read(eq("$.data.timestamp"), any(TypeRef.class)))
                 .thenReturn(values);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("date", result.getKey());
         Assertions.assertTrue(result.getValue() instanceof Date);
@@ -294,12 +281,11 @@ public class PathExpressionTest {
         adjustments.add(adjustment2);
 
         expression.setAdjustments(adjustments);
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         Mockito.when(mockDocumentContext.read(eq("$.data.value"), any(TypeRef.class)))
                 .thenReturn(Collections.singletonList(5));
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("adjusted", result.getKey());
         // (5 + 10) * 2 = 30
@@ -316,7 +302,6 @@ public class PathExpressionTest {
         filter.setField("$.transaction");
         filter.setValue("tid01");
         expression.setFilters(Collections.singletonList(filter));
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         // Mock the filter evaluation to return true
         Mockito.when(mockDocumentContext.read(anyString(), any(TypeRef.class)))
@@ -325,7 +310,7 @@ public class PathExpressionTest {
                 .thenReturn(Collections.singletonList(42));
 
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("filtered", result.getKey());
         Assertions.assertEquals(42, result.getValue());
@@ -341,7 +326,6 @@ public class PathExpressionTest {
         filter.setField("$.transaction");
         filter.setValue("tid01");
         expression.setFilters(Collections.singletonList(filter));
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
         Mockito.when(mockDocumentContext.read(eq("$.data.value"), any(TypeRef.class)))
                 .thenReturn(Collections.singletonList(42));
@@ -350,7 +334,7 @@ public class PathExpressionTest {
         Mockito.when(mockDocumentContext.read(anyString(), any(TypeRef.class)))
                 .thenReturn(Collections.singletonList("tid02"));
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNull(result);
     }
 
@@ -359,9 +343,8 @@ public class PathExpressionTest {
         PathExpression expression = new PathExpression();
         expression.setKey("directValue");
         expression.setValue("testValue");
-        PathExpressionEval expressionEval = new PathExpressionEval(bonsaiHopeEngine, expression);
 
-        Pair<String, Object> result = expressionEval.eval(mockDocumentContext);
+        Pair<String, Object> result = expression.eval(mockDocumentContext);
         Assertions.assertNotNull(result);
         Assertions.assertEquals("directValue", result.getKey());
         Assertions.assertEquals("testValue", result.getValue());

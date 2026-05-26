@@ -16,8 +16,6 @@
 
 package com.phonepe.commons.bonsai.json.eval;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.jayway.jsonpath.DocumentContext;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -91,20 +89,5 @@ public class Utils {
 
     public static <T> boolean isEmpty(Collection<T> collection) {
         return collection == null || collection.isEmpty();
-    }
-
-    public static JsonEvalContext getJsonEvalContext(final DocumentContext documentContext,
-                                                     final JsonNode contextAsJsonNode) {
-        return new JsonEvalContext() {
-            @Override
-            public DocumentContext documentContext() {
-                return documentContext;
-            }
-
-            @Override
-            public JsonNode contextAsJsonNode() {
-                return contextAsJsonNode;
-            }
-        };
     }
 }

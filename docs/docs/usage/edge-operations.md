@@ -170,13 +170,6 @@ Filter regexFilter = Filter.builder()
     .operator(Operator.REGEX)
     .value("^\\+1-\\d{3}-\\d{3}-\\d{4}$")
     .build();
-
-// Hope filter (Hope expression)
-Filter hopeFilter = Filter.builder()
-    .field("$.user.age")
-    .operator(Operator.HOPE)
-    .value("\"$.user.age\" > 18")
-    .build();
 ```
 
 ## Error Handling

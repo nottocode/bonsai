@@ -19,12 +19,10 @@ package com.phonepe.commons.bonsai.core.vital;
 import com.phonepe.commons.bonsai.core.Bonsai;
 import com.phonepe.commons.bonsai.core.vital.random.RandomIdProvider;
 import com.phonepe.commons.bonsai.core.vital.random.impl.SecureRandomIdProvider;
-import com.phonepe.commons.bonsai.json.eval.BonsaiHopeEngine;
 import com.phonepe.commons.bonsai.core.vital.provided.VariationSelectorEngine;
 import com.phonepe.commons.bonsai.core.vital.provided.impl.InMemoryEdgeStore;
 import com.phonepe.commons.bonsai.core.vital.provided.impl.InMemoryKeyTreeStore;
 import com.phonepe.commons.bonsai.core.vital.provided.impl.InMemoryKnotStore;
-import com.phonepe.commons.bonsai.json.eval.hope.impl.BonsaiHopeHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -46,8 +44,7 @@ class BonsaiBuilderTest {
         final var keyTreeStore = new InMemoryKeyTreeStore();
         final var knotStore = new InMemoryKnotStore();
         final var edgeStore = new InMemoryEdgeStore();
-        final var hopeEngine = new BonsaiHopeEngine(new BonsaiHopeHandler());
-        final VariationSelectorEngine<Context> variationSelectorEngine = new VariationSelectorEngine<>(hopeEngine);
+        final VariationSelectorEngine<Context> variationSelectorEngine = new VariationSelectorEngine<>();
         final BonsaiProperties bonsaiProperties = BonsaiProperties.builder().build();
         final BonsaiIdGenerator bonsaiIdGenerator = new BonsaiIdGenerator() {
 
@@ -71,7 +68,6 @@ class BonsaiBuilderTest {
                 .withBonsaiProperties(bonsaiProperties)
                 .withBonsaiIdGenerator(bonsaiIdGenerator)
                 .withBonsaiProperties(BonsaiProperties.builder().build())
-                .withHopeHandler(hopeEngine)
                 .build();
 
         assertNotNull(bonsaiTree);

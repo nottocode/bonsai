@@ -18,7 +18,6 @@ package com.phonepe.commons.bonsai.json.eval;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jayway.jsonpath.JsonPath;
-import com.phonepe.commons.bonsai.json.eval.hope.impl.BonsaiHopeHandler;
 import com.phonepe.commons.query.dsl.Filter;
 import com.phonepe.commons.query.dsl.general.GenericFilter;
 import org.junit.jupiter.api.Assertions;
@@ -33,21 +32,19 @@ public class JsonPathEvaluationTest {
 
     private final ObjectExtractor objectExtractor = new ObjectExtractor();
 
-    private final BonsaiHopeEngine bonsaiHopeEngine = new BonsaiHopeEngine(new BonsaiHopeHandler());
-
     @Test
     void testJsonPathEval() throws IOException {
         JsonPathSetup.setup();
         Map object = objectExtractor.getObject("sample.json", Map.class);
         JsonPathFilterEvaluationEngine<JsonEvalContext, String> eval
-                = new JsonPathFilterEvaluationEngine<>("temp", Utils.getJsonEvalContext(JsonPath.parse(object), null),
-                genericFilterContext -> true, null, bonsaiHopeEngine);
+                = new JsonPathFilterEvaluationEngine<>("temp", () -> JsonPath.parse(object),
+                genericFilterContext -> true, null);
         List<Filter> filters = objectExtractor.getObject("filterList1.json", new TypeReference<>() {
         });
         long count = filters.stream()
                 .filter(filter -> filter.accept(eval))
                 .count();
-        Assertions.assertEquals(9, count);
+        Assertions.assertEquals(8, count);
     }
 
     @Test
@@ -55,14 +52,14 @@ public class JsonPathEvaluationTest {
         JsonPathSetup.setup();
         Map object = objectExtractor.getObject("sample.json", Map.class);
         JsonPathFilterEvaluationEngine<JsonEvalContext, String> eval
-                = new TraceWrappedJsonPathFilterEvaluationEngine<>("temp", Utils.getJsonEvalContext(JsonPath.parse(object), null),
-                genericFilterContext -> true, bonsaiHopeEngine);
+                = new TraceWrappedJsonPathFilterEvaluationEngine<>("temp", () -> JsonPath.parse(object),
+                genericFilterContext -> true);
         List<Filter> filters = objectExtractor.getObject("filterList1.json", new TypeReference<>() {
         });
         long count = filters.stream()
                 .filter(filter -> filter.accept(eval))
                 .count();
-        Assertions.assertEquals(9, count);
+        Assertions.assertEquals(8, count);
     }
 
     @Test
@@ -80,10 +77,9 @@ public class JsonPathEvaluationTest {
         JsonPathFilterEvaluationEngine<JsonEvalContext, String> evalWithCorrectKey =
                 new JsonPathFilterEvaluationEngine<>(
                         "test-entity",
-                        Utils.getJsonEvalContext(JsonPath.parse(object), null),
+                        () -> JsonPath.parse(object),
                         handler,
-                        expectedKey,
-                        bonsaiHopeEngine
+                        expectedKey
                 );
 
         boolean result1 = genericFilter.accept(evalWithCorrectKey);
@@ -93,10 +89,9 @@ public class JsonPathEvaluationTest {
         JsonPathFilterEvaluationEngine<JsonEvalContext, String> evalWithWrongKey =
                 new JsonPathFilterEvaluationEngine<>(
                         "test-entity",
-                        Utils.getJsonEvalContext(JsonPath.parse(object), null),
+                        () -> JsonPath.parse(object),
                         handler,
-                        "wrong-key",
-                        bonsaiHopeEngine
+                        "wrong-key"
                 );
 
         boolean result2 = genericFilter.accept(evalWithWrongKey);
