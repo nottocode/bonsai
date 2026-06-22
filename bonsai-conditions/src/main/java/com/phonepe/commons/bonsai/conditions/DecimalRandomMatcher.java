@@ -35,7 +35,6 @@ public class DecimalRandomMatcher extends RandomMatcher {
     }
 
     @Override
-    @SuppressWarnings("java:S2245") // We are using ThreadLocalRandom which is a better alternative to SecureRandom in multi-threaded environments
     public Boolean match(Number value) {
         final long h = higherBound * FACTOR;
         final long l = lowerBound * FACTOR;

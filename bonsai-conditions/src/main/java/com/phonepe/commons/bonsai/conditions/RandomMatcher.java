@@ -50,7 +50,6 @@ public class RandomMatcher implements Matcher.BooleanUniMatcher<Number> {
      * @return if
      */
     @Override
-    @SuppressWarnings("java:S2245") // We are using ThreadLocalRandom which is a better alternative to SecureRandom in multi-threaded environments
     public Boolean match(Number value) {
         final long randomNumber = Math.abs(ThreadLocalRandom.current()
                 .nextLong(lowerBound, higherBound));
